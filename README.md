@@ -45,6 +45,12 @@ Execute the main script from the root directory:
 python src/main.py
 ```
 
+## ⚙️ Execution Modes
+The system automatically detects your configuration and chooses the appropriate mode:
+
+- **Real CrewAI Mode**: Active when a valid `OPENAI_API_KEY` is provided in the `.env` file. This mode uses live LLM agents to research and generate content.
+- **Local Demo Fallback Mode**: Active when no API key is found. This mode safely simulates the four-agent workflow and generates a demo study guide to demonstrate the system structure without consuming API credits.
+
 ## 🎓 Grading Checklist Compliance
 - [x] At least 4 chained agents.
 - [x] Manager agent included.
