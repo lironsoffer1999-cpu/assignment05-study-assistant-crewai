@@ -21,7 +21,7 @@ The system employs 4 distinct agents:
 ## 📋 Requirements
 - Python 3.10+
 - CrewAI
-- OpenAI API Key (or equivalent LLM provider)
+- Google Gemini API Key
 
 ## 🏗️ Installation & Setup
 1. Clone the repository.
@@ -32,11 +32,11 @@ The system employs 4 distinct agents:
    ```
 3. Install dependencies:
    ```bash
-   pip install crewai
+   pip install -r requirements.txt
    ```
 4. Configure your `.env` file:
    ```env
-   OPENAI_API_KEY=your_api_key_here
+   GOOGLE_API_KEY=your_api_key_here
    ```
 
 ## 🏁 How to Run
@@ -48,7 +48,7 @@ python src/main.py
 ## ⚙️ Execution Modes
 The system automatically detects your configuration and chooses the appropriate mode:
 
-- **Real CrewAI Mode**: Active when a valid `OPENAI_API_KEY` is provided in the `.env` file. This mode uses live LLM agents to research and generate content.
+- **Real CrewAI Mode**: Active when a valid `GOOGLE_API_KEY` is provided in the `.env` file. This mode uses live LLM agents (Gemini 2.0 Flash) to research and generate content.
 - **Local Demo Fallback Mode**: Active when no API key is found. This mode safely simulates the four-agent workflow and generates a demo study guide to demonstrate the system structure without consuming API credits.
 
 ## 🎓 Grading Checklist Compliance

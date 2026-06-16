@@ -1,16 +1,27 @@
 import os
 from dotenv import load_dotenv
-from crewai import Agent, Task, Crew, Process
+from crewai import Agent, Task, Crew, Process, LLM
 
 # Load environment variables for API keys
 load_dotenv()
 
 def run_study_crew():
-    print("=== Study Assistant Crew ===")
-    print("Note: This system requires an LLM provider (e.g., OpenAI) configured via environment variables.")
-    print("Ensure OPENAI_API_KEY is set in your .env file or environment.\n")
+    print("=== Study Assistant Crew (Gemini Edition) ===")
+    print("Note: This system requires Google Gemini API configured via environment variables.")
+    print("Ensure GOOGLE_API_KEY is set in your .env file or environment.\n")
     
     topic = input("Enter the academic topic you'd like to study: ")
+
+    # Initialize Gemini LLM
+    # Using gemini-2.5-flash-lite for speed and reliability
+    google_api_key = os.getenv("GOOGLE_API_KEY")
+    os.environ["GOOGLE_API_KEY"] = google_api_key
+    os.environ["GEMINI_API_KEY"] = google_api_key
+
+    llm = LLM(
+        model="gemini/gemini-2.5-flash-lite",
+        api_key=google_api_key
+    )
 
     # 1. Study Manager — coordinates the workflow.
     study_manager = Agent(
@@ -23,6 +34,7 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=True,
+        llm=llm,
         tools=[]
     )
 
@@ -37,6 +49,7 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
+        llm=llm,
         tools=[]
     )
 
@@ -51,6 +64,7 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
+        llm=llm,
         tools=[]
     )
 
@@ -65,6 +79,7 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
+        llm=llm,
         tools=[]
     )
 
@@ -125,14 +140,14 @@ def run_study_crew():
     print(f"\n--- Starting Workflow for: {topic} ---\n")
     
     # Check for API Key before kickoff
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("GOOGLE_API_KEY")
     
-    if api_key and api_key != "your_openai_api_key_here":
+    if api_key and api_key != "your_google_api_key_here":
         # Run the real CrewAI workflow
         result = study_crew.kickoff()
     else:
         # Local Demo Fallback
-        print("WARNING: No valid OPENAI_API_KEY found.")
+        print("WARNING: No valid GOOGLE_API_KEY found.")
         print("CrewAI requires an LLM provider to execute real agent logic.")
         print("\n--- Simulating Local Demo Workflow ---")
         print("1. [Study Manager] -> Defining guide scope and focus areas...")
