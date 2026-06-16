@@ -13,7 +13,8 @@ The Study Assistant Crew follows a hierarchical/sequential architecture managed 
 ## 2. Technical Stack
 - **Language**: Python 3.10+
 - **Orchestration**: CrewAI
-- **LLM Integration**: LangChain (targeting OpenAI or local models via Ollama)
+- **LLM Integration**: Google Gemini API via CrewAI LLM
+- **Model**: gemini/gemini-2.5-flash-lite
 - **Environment Management**: Virtualenv / .venv
 
 ## 3. Directory Structure

@@ -40,7 +40,7 @@ The system employs 4 distinct agents:
    ```
 
 ## 🏁 How to Run
-Execute the main script from the root directory:
+Execute the main script from the root directory. Ensure your `GOOGLE_API_KEY` is set in the `.env` file:
 ```bash
 python src/main.py
 ```
@@ -48,8 +48,13 @@ python src/main.py
 ## ⚙️ Execution Modes
 The system automatically detects your configuration and chooses the appropriate mode:
 
-- **Real CrewAI Mode**: Active when a valid `GOOGLE_API_KEY` is provided in the `.env` file. This mode uses live LLM agents (Gemini 2.0 Flash) to research and generate content.
+- **Real CrewAI Mode**: Active when a valid `GOOGLE_API_KEY` is provided in the `.env` file. This mode uses live LLM agents (Gemini 2.5 Flash Lite) to research and generate content.
 - **Local Demo Fallback Mode**: Active when no API key is found. This mode safely simulates the four-agent workflow and generates a demo study guide to demonstrate the system structure without consuming API credits.
+
+## 📝 Proof of Run
+Logs and outputs from a successful execution can be found here:
+- **Output Guide**: [output/ai_guide.md](output/ai_guide.md)
+- **Execution Log**: [logs/real_gemini_run.txt](logs/real_gemini_run.txt)
 
 ## 🎓 Grading Checklist Compliance
 - [x] At least 4 chained agents.
