@@ -18,10 +18,12 @@ The system employs 4 distinct agents:
 - **Verbose Tracking**: Real-time insights into agent "thoughts" and actions.
 - **Standardized Output**: Generates structured Markdown files for easy reading.
 
-## 📋 Requirements
-- Python 3.10+
-- CrewAI
-- Google Gemini API Key
+## 📋 Requirements & Provider
+- **Provider**: Google Gemini API
+- **Model**: `gemini/gemini-2.5-flash-lite`
+- **API Key**: `GOOGLE_API_KEY`
+- **Language**: Python 3.10+
+- **Framework**: CrewAI
 
 ## 🏗️ Installation & Setup
 1. Clone the repository.
@@ -37,24 +39,14 @@ The system employs 4 distinct agents:
 4. Configure your `.env` file:
    ```env
    GOOGLE_API_KEY=your_api_key_here
+   CREWAI_DISABLE_TELEMETRY=true
    ```
 
 ## 🏁 How to Run
-Execute the main script from the root directory. Ensure your `GOOGLE_API_KEY` is set in the `.env` file:
+Execute the main script from the root directory. The system will prompt you for a study topic and perform the full agentic workflow powered by Google Gemini:
 ```bash
 python src/main.py
 ```
-
-## ⚙️ Execution Modes
-The system automatically detects your configuration and chooses the appropriate mode:
-
-- **Real CrewAI Mode**: Active when a valid `GOOGLE_API_KEY` is provided in the `.env` file. This mode uses live LLM agents (Gemini 2.5 Flash Lite) to research and generate content.
-- **Local Demo Fallback Mode**: Active when no API key is found. This mode safely simulates the four-agent workflow and generates a demo study guide to demonstrate the system structure without consuming API credits.
-
-## 📝 Proof of Run
-Logs and outputs from a successful execution can be found here:
-- **Output Guide**: [output/ai_guide.md](output/ai_guide.md)
-- **Execution Log**: [logs/real_gemini_run.txt](logs/real_gemini_run.txt)
 
 ## 🎓 Grading Checklist Compliance
 - [x] At least 4 chained agents.

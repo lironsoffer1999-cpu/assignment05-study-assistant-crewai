@@ -1,4 +1,5 @@
 import os
+import sys
 from dotenv import load_dotenv
 from crewai import Agent, Task, Crew, Process, LLM
 
@@ -7,23 +8,26 @@ load_dotenv()
 
 def run_study_crew():
     print("=== Study Assistant Crew (Gemini Edition) ===")
-    print("Note: This system requires Google Gemini API configured via environment variables.")
-    print("Ensure GOOGLE_API_KEY is set in your .env file or environment.\n")
     
-    topic = input("Enter the academic topic you'd like to study: ")
-
-    # Initialize Gemini LLM
-    # Using gemini-2.5-flash-lite for speed and reliability
+    # 1. Check for API Key immediately
     google_api_key = os.getenv("GOOGLE_API_KEY")
-    os.environ["GOOGLE_API_KEY"] = google_api_key
-    os.environ["GEMINI_API_KEY"] = google_api_key
+    if not google_api_key or google_api_key == "your_google_api_key_here":
+        print("\nERROR: GOOGLE_API_KEY is missing or invalid.")
+        print("Please configure your .env file with a valid Gemini API key.")
+        sys.exit(1)
 
-    llm = LLM(
+    # 2. Configure Gemini LLM
+    # We use gemini-2.5-flash-lite for efficient and high-quality educational synthesis
+    gemini_llm = LLM(
         model="gemini/gemini-2.5-flash-lite",
         api_key=google_api_key
     )
 
-    # 1. Study Manager — coordinates the workflow.
+    topic = input("Enter the academic topic you'd like to study: ")
+
+    # --- Agent Definitions ---
+
+    # Study Manager — coordinates the workflow.
     study_manager = Agent(
         role='Study Manager',
         goal=f'Coordinate the creation of a comprehensive study guide for {topic}.',
@@ -34,11 +38,11 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=True,
-        llm=llm,
+        llm=gemini_llm,
         tools=[]
     )
 
-    # 2. Summary Specialist — creates a structured topic summary.
+    # Summary Specialist — creates a structured topic summary.
     summary_specialist = Agent(
         role='Summary Specialist',
         goal=f'Create a structured and detailed summary of {topic}.',
@@ -49,11 +53,11 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
-        llm=llm,
+        llm=gemini_llm,
         tools=[]
     )
 
-    # 3. Quiz Creator — creates practice questions.
+    # Quiz Creator — creates practice questions.
     quiz_creator = Agent(
         role='Quiz Creator',
         goal=f'Create practice questions based on the topic summary of {topic}.',
@@ -64,11 +68,11 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
-        llm=llm,
+        llm=gemini_llm,
         tools=[]
     )
 
-    # 4. Quality Reviewer — reviews accuracy, clarity, and completeness.
+    # Quality Reviewer — reviews accuracy, clarity, and completeness.
     quality_reviewer = Agent(
         role='Quality Reviewer',
         goal='Review the summary and quiz for accuracy, clarity, and completeness.',
@@ -79,13 +83,12 @@ def run_study_crew():
         ),
         verbose=True,
         allow_delegation=False,
-        llm=llm,
+        llm=gemini_llm,
         tools=[]
     )
 
     # --- Task Definitions ---
 
-    # Task for the Manager to set the stage
     planning_task = Task(
         description=(
             f"Define the scope and key focus areas for a study guide on {topic}. "
@@ -95,7 +98,6 @@ def run_study_crew():
         agent=study_manager
     )
 
-    # Task for summary generation
     summary_task = Task(
         description=(
             f"Based on the manager's outline, write a comprehensive and structured summary of {topic}. "
@@ -106,7 +108,6 @@ def run_study_crew():
         context=[planning_task]
     )
 
-    # Task for quiz generation
     quiz_task = Task(
         description=(
             "Using the summary as a reference, create a practice quiz. "
@@ -117,7 +118,6 @@ def run_study_crew():
         context=[summary_task]
     )
 
-    # Task for quality review
     review_task = Task(
         description=(
             "Perform a final review of the summary and the quiz. "
@@ -129,7 +129,8 @@ def run_study_crew():
         context=[planning_task, summary_task, quiz_task]
     )
 
-    # Create a Crew with sequential process
+    # --- Crew Orchestration ---
+
     study_crew = Crew(
         agents=[study_manager, summary_specialist, quiz_creator, quality_reviewer],
         tasks=[planning_task, summary_task, quiz_task, review_task],
@@ -137,43 +138,11 @@ def run_study_crew():
         verbose=True
     )
 
-    print(f"\n--- Starting Workflow for: {topic} ---\n")
+    print(f"\n--- Starting Gemini-Powered Workflow for: {topic} ---\n")
     
-    # Check for API Key before kickoff
-    api_key = os.getenv("GOOGLE_API_KEY")
+    # Execute the workflow
+    result = study_crew.kickoff()
     
-    if api_key and api_key != "your_google_api_key_here":
-        # Run the real CrewAI workflow
-        result = study_crew.kickoff()
-    else:
-        # Local Demo Fallback
-        print("WARNING: No valid GOOGLE_API_KEY found.")
-        print("CrewAI requires an LLM provider to execute real agent logic.")
-        print("\n--- Simulating Local Demo Workflow ---")
-        print("1. [Study Manager] -> Defining guide scope and focus areas...")
-        print("2. [Summary Specialist] -> Synthesizing topic information...")
-        print("3. [Quiz Creator] -> Designing practice assessments...")
-        print("4. [Quality Reviewer] -> Auditing content and finalizing guide...")
-        
-        result = f"""# Study Guide: {topic} (DEMO)
-
-## Executive Summary
-This is a simulated study guide for **{topic}**. In a live environment with an API key, the agents would perform deep research and synthesis.
-
-## Key Concepts
-- **Concept A**: Foundational element of {topic}.
-- **Concept B**: Secondary theoretical framework.
-
-## Practice Quiz
-1. What is the primary focus of {topic}?
-   - A) Option 1
-   - B) Option 2
-   - Answer: A
-
-## Quality Assurance
-Verified for structure and clarity by the Quality Reviewer (Simulation).
-"""
-
     print("\n" + "="*30)
     print("FINAL STUDY GUIDE")
     print("="*30 + "\n")
