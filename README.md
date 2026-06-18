@@ -78,3 +78,29 @@ logs/
 Execution screenshot:
 
 screenshots/run_proof.png
+## Agent Contributions
+
+The project uses four specialized CrewAI agents that work together in a sequential workflow:
+
+* **Study Manager** – defines the structure and scope of the study guide.
+* **Summary Specialist** – creates a structured academic summary of the topic.
+* **Quiz Creator** – generates practice questions and answers based on the summary.
+* **Quality Reviewer** – performs a final review and combines all outputs into a cohesive study guide.
+
+This separation of responsibilities demonstrates how multiple AI agents can collaborate to produce higher-quality educational content.
+
+## Challenges and Fixes
+
+During development, the main challenge was integrating CrewAI with Google Gemini. Temporary API issues such as rate limits and service availability errors (429 and 503 responses) were encountered during testing.
+
+The project code itself remained functional throughout the process. Once API availability was restored, the workflow executed successfully and generated the final study guide output.
+
+## Model Choice
+
+The project uses Google Gemini through CrewAI with the model:
+
+`gemini/gemini-2.5-flash-lite`
+
+This model was selected because it provides a good balance between response quality, execution speed, and accessibility for educational workflows.
+
+It is well suited for generating study summaries, practice questions, and reviewed learning materials within a multi-agent architecture.
