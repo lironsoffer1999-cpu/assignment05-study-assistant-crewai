@@ -56,3 +56,25 @@ python src/main.py
 - [x] `verbose=True` for full transparency.
 - [x] Single terminal execution.
 - [x] Documented organizational structure.
+
+## Proof of Run
+
+The project was executed from the terminal using:
+
+python src/main.py
+
+Example input:
+
+AI
+
+Generated output:
+
+output/ai_guide.md
+
+Run logs:
+
+logs/
+
+Execution screenshot:
+
+screenshots/run_proof.png
